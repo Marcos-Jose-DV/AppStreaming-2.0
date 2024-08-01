@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppAvaliacao.Pages.HomePage"
+             BackgroundColor="#041218"
+             Shell.BackgroundColor="#3255e2"
+             Shell.TitleColor="White"
+             x:Name="PaiPage"
+             Title="Avaliações">
+
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Start"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <ContentPage.MenuBarItems >
+        <MenuBarItem Text="Baixar">
+            <MenuFlyoutItem Text="Excel">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128202;"
+                                 FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="PDF">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128196;"
+                                 FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Wold">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128195;"
+                                 FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="TXT">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128221;"
+                     FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+        </MenuBarItem>
+
+        <MenuBarItem Text="Inporta">
+            <MenuFlyoutItem Text="Excel">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128202;"
+                         FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="PDF">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128196;"
+                         FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="Wold">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128195;"
+                         FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+            <MenuFlyoutItem Text="TXT">
+                <MenuFlyoutItem.IconImageSource>
+                    <FontImageSource Glyph="&#128221;"
+             FontFamily="Arial" />
+                </MenuFlyoutItem.IconImageSource>
+            </MenuFlyoutItem>
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>
+    
+    <Grid x:Name="GridContainer">
+        <Button ZIndex="2"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="10"
+                Text="+"
+                FontSize="30"
+                WidthRequest="60"
+                HeightRequest="60"
+                BackgroundColor="White"
+                Clicked="AddAssessment"/>
+        <ScrollView>
+            <VerticalStackLayout>
+                <!-- Header -->
+                <VerticalStackLayout>
+                    <HorizontalStackLayout BackgroundColor="#202380" Padding="10">
+                        <Button Text="Inicio" Command="{Binding FilterCommand}" CommandParameter="All"/>
+                        <Button Text="Filmes" Command="{Binding FilterCommand}" CommandParameter="Movie"/>
+                        <Button Text="Séries" Command="{Binding FilterCommand}" CommandParameter="Séries"/>
+                        <Button Text="Livros" Command="{Binding FilterCommand}" CommandParameter="Book"/>
+                        <Button Text="Musicas" Command="{Binding FilterCommand}" CommandParameter="Music"/>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+
+                <!-- Body -->
+                <FlexLayout FlexLayout.Grow="1"
+                            Wrap="Wrap"
+                            JustifyContent="Start"
+                            HorizontalOptions="Center"
+                            BindableLayout.ItemsSource="{Binding CardsHome}">
+
+                    <!-- Content -->
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Frame CornerRadius="10"
+                                       HasShadow="True"
+                                       BorderColor="White"
+                                       WidthRequest="160"
+                                       HeightRequest="240"
+                                       Padding="0"
+                                       Margin="15">
+                                    <Image Source="{Binding ImagePath}"
+                                           x:Name="ImageCard"
+                                           Aspect="AspectFill"
+                                           WidthRequest="160"
+                                           HeightRequest="240">
+
+                                        <Image.GestureRecognizers>
+                                            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                                                      PointerExited="OnPointerExited"/>
+
+                                            <TapGestureRecognizer Command="{Binding BindingContext.DetailCommand,Source={x:Reference PaiPage}}"
+                                                                  CommandParameter="{Binding Id}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

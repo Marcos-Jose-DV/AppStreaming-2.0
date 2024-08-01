@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppAvaliacao.Pages.PlayPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False"
+             Unloaded="ContentPage_Unloaded"
+             Title="PlayPage">
+    <Grid ColumnDefinitions="*" RowDefinitions="*">
+        <Grid.GestureRecognizers>
+            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                        PointerExited="OnPointerExited"
+                        PointerMoved="OnPointerMoved"/>
+        </Grid.GestureRecognizers>
+      
+        <toolkit:MediaElement x:Name="mediaElement"
+                              Source="{Binding Video.Source}" 
+                              ShouldAutoPlay="True" 
+                              Aspect="AspectFill"
+                              ShouldKeepScreenOn="True"
+                              ShouldShowPlaybackControls="False"/>
+
+
+        <Grid ZIndex="1"
+              x:Name="GridDisplay"
+              IsVisible="False">
+
+            <Button ZIndex="1"
+                    x:Name="ButtonBack"
+                    Text="◀️"
+                    TextColor="White"
+                    BackgroundColor="Transparent"
+                    WidthRequest="88"
+                    HeightRequest="88"
+                    FontSize="44"
+                    Margin="20"
+                    VerticalOptions="Start"
+                    HorizontalOptions="Start"
+                    Command="{Binding BackCommand}"/> 
+            <VerticalStackLayout ZIndex="1"
+                                 VerticalOptions="EndAndExpand"
+                                 x:Name="VerticalStackLayoutDisplay">
+
+
+                <Grid Padding="0"
+                  HeightRequest="100"
+                  VerticalOptions="End"
+                  BackgroundColor="#041218"
+                  Opacity="0.8"
+                  ZIndex="0">
+
+                    <Slider x:Name="PositionSlider"
+                        Minimum="0"
+                        MinimumTrackColor="Red"
+                        MaximumTrackColor="Gray"
+                        Margin="0,-18,0,0"
+                        VerticalOptions="StartAndExpand"
+                        DragStarted="Slider_DragStarted"
+                        DragCompleted="Slider_DragCompleted"
+                        ValueChanged="OnSliderValueChanged"/>
+
+                    <Label x:Name="displayLabelPosition"
+                   Margin="20,0,0,0"
+                   VerticalOptions="Center"/>
+
+                    <Label x:Name="displayLabelDurantion"
+                       Margin="0,0,20,0"
+                       VerticalOptions="Center"
+                       HorizontalOptions="End"
+                       ZIndex="1"/>
+
+                    <HorizontalStackLayout HorizontalOptions="Center"
+                                       Spacing="20"
+                                       ZIndex="3">
+
+                        <Button Text="◀️"
+                            TextColor="White"
+                            BackgroundColor="Transparent"
+                            WidthRequest="44"
+                            HeightRequest="44"/>
+
+                        <Button Text="▶️"
+                            FontSize="30"
+                            TextColor="White"
+                            BackgroundColor="Transparent"
+                            WidthRequest="66"
+                            HeightRequest="66"
+                            HorizontalOptions="Center"
+                            Clicked="OnStartAndPause"
+                            Command="{Binding StartAndPauseCommand}"/>
+
+                        <Button Text="▶️"
+                            TextColor="White"
+                            BackgroundColor="Transparent"
+                            WidthRequest="44"
+                            HeightRequest="44"/>
+
+
+                    </HorizontalStackLayout>
+
+                    <Slider x:Name="SliderVolume"
+                            Minimum="0"
+                            Maximum="100"
+                            Rotation="0"
+                            HorizontalOptions="End"
+                            VerticalOptions="Center"
+                            Margin="0,0,150,0"
+                            MinimumTrackColor="CadetBlue"
+                            MaximumTrackColor="LightGray"
+                            WidthRequest="200"
+                            ValueChanged="Slider_Volume"/>
+
+                </Grid>
+
+            </VerticalStackLayout>
+        </Grid>
+
+        <Grid VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Margin="10">
+            <WebView Source="{Binding IsBook}" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand"/>
+        </Grid>
+    </Grid>
+</ContentPage>

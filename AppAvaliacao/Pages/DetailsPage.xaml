@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppAvaliacao.Pages.DetailsPage"
+             BackgroundColor="#041218"
+             Shell.NavBarIsVisible="False"
+             Title="DetailsPage">
+
+
+    <ContentPage.Resources>
+        <Style TargetType="Button">
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="BackgroundColor" Value="Transparent"/>
+            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="HorizontalOptions" Value="Start"/>
+            <Setter Property="VerticalOptions" Value="Center"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*" x:Name="DetailPage">
+
+            <VerticalStackLayout x:Name="CommentsDisplay"
+                                 IsVisible="False"
+                                 Grid.Row="1"
+                                 Margin="20"
+                                 Spacing="20">
+                <Label Text="Comentario"
+                       VerticalOptions="Start"/>
+                <Label Text="{Binding Assessment.Comments}"
+                       FontSize="22"
+                       VerticalOptions="Center"/>
+            </VerticalStackLayout>
+            
+            <Grid ColumnDefinitions="*,*,*"
+                  RowDefinitions="*,Auto"
+                  HeightRequest="404"  
+                  VerticalOptions="StartAndExpand">
+                <VerticalStackLayout Grid.ColumnSpan="3" 
+                                     ZIndex="1"
+                                     VerticalOptions="Center">
+                    <Grid ColumnDefinitions="Auto,Auto" 
+                          HorizontalOptions="Center" 
+                          Margin="0,0,0,0"  
+                          ColumnSpacing="20">
+                        <Frame CornerRadius="0"
+                               HasShadow="True"
+                               BorderColor="White"
+                               Padding="0">
+
+                            <Image Grid.Column="0"
+                                   HorizontalOptions="End"
+                                   Source="{Binding Assessment.ImagePath}" 
+                                   Aspect="AspectFill" 
+                                   WidthRequest="190"/>
+                        </Frame>
+
+                        <Border StrokeShape="RoundRectangle 50"
+                                Stroke="Transparent"
+                                WidthRequest="66" 
+                                HeightRequest="66" 
+                                BackgroundColor="Transparent"
+                                Opacity="1">
+
+                            <Grid>
+                                <BoxView Opacity="0.6" 
+                                         BackgroundColor="Black"/>
+                                <Button Text="▶️"
+                                        FontSize="30"
+                                        Command="{Binding  PlayCommand}"/>
+                            </Grid>
+                        </Border>
+
+                        <VerticalStackLayout Grid.Column="1" 
+                                             MaximumWidthRequest="1800">
+
+                            <Label Text="{Binding Assessment.Name}"
+                                   FontSize="24"/>
+
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Assessment.Id, StringFormat='ID {0} | '}"/>
+                                <Label Text="{Binding Assessment.Duration, StringFormat='Minutos {0}'}"/>
+                                <Label Text="{Binding Assessment.Gender, StringFormat='  |  {0}'}"/>
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Assessment.Concluded, StringFormat='Assistir {0}'}"/>
+                                <Label Text="{Binding Assessment.Director, StringFormat='  | Diretor {0}'}"/>
+                                <Label Text="{Binding Assessment.Launch, StringFormat='  |  Ano {0:yyyy}'}"/>
+                            </HorizontalStackLayout>
+
+                            <HorizontalStackLayout>
+                                <Label Text="{Binding Assessment.Assessment, StringFormat='Nota {0}'}"/>
+                                <Label Text="{Binding Assessment.LastUpdate, StringFormat='  |  Data da ultima atualização {0:dd/MM/yyyy}'}"/>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+
+
+                        <HorizontalStackLayout Grid.Column="1" Spacing="10">
+                            <Button Text="Editar" 
+                                    HorizontalOptions="StartAndExpand" 
+                                    VerticalOptions="End"
+                                    Clicked="Edit"
+                                    BindingContext="{Binding Assessment}"/>
+                            <Button Text="Remover" 
+                                    HorizontalOptions="StartAndExpand" 
+                                    VerticalOptions="End"/>
+                            <Button Text="Ler Comentario" 
+                                    HorizontalOptions="StartAndExpand" 
+                                    VerticalOptions="End"
+                                    Clicked="IsVibleComments"/>
+                        </HorizontalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+
+
+                <BoxView Grid.Column="0" HeightRequest="404" MinimumWidthRequest="1000"  VerticalOptions="StartAndExpand" HorizontalOptions="Start">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="6,0" EndPoint="0,0">
+                            <GradientStop Color="LightGray" Offset="0.0" />
+                            <GradientStop Color="Transparent" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+
+                <Image Grid.Column="0"
+                       Grid.ColumnSpan="3"
+                       HorizontalOptions="Center"
+                       WidthRequest="650"
+                       Margin="0,0,0,0"
+                       Source="{Binding Assessment.ImagePath}" 
+                       Aspect="AspectFill" />
+                <BoxView Grid.Column="1" 
+                         BackgroundColor="#041218" 
+                         WidthRequest="3000" 
+                         Opacity="0.7" />
+
+                <BoxView Grid.Column="2" HeightRequest="404" MinimumWidthRequest="1000" VerticalOptions="StartAndExpand" HorizontalOptions="End">
+                    <BoxView.Background>
+                        <LinearGradientBrush StartPoint="6,0" EndPoint="0,0">
+                            <GradientStop Color="LightGray" Offset="0.0" />
+                            <GradientStop Color="Transparent" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </BoxView.Background>
+                </BoxView>
+            </Grid>
+        </Grid>
+    </ScrollView>
+</ContentPage>
