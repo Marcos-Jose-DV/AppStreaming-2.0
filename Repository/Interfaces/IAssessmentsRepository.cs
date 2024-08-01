@@ -7,8 +7,9 @@ namespace Repository.Interfaces;
 
 public interface  IAssessmentsRepository
 {
-    Task PostAll(Assessments assessments);
-    Task<IEnumerable<CardHome>> GetAllAsync();
+    Task PostAll(IEnumerable<Assessments> assessments);
+    Task<List<Assessments>> GetAllAssessments();
+    Task<IEnumerable<CardHome>> GetCardsHome();
     Task<IEnumerable<CardHome>> GetFilterAsync(string filter);
     Task<Assessments> GetByIdAsync(int id);
     Task PostAsync(Assessments assessment);

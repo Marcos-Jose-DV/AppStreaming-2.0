@@ -16,7 +16,20 @@ public class AssessmentsRepository : IAssessmentsRepository
     }
 
 
-    public async Task<IEnumerable<CardHome>> GetAllAsync()
+    public async Task<Assessments> GetByIdAsync(int id)
+    {
+        var assessment = await _appDbContext.Assessments
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        return assessment;
+    }
+    public async Task<List<Assessments>> GetAllAssessments()
+        => await _appDbContext.Assessments
+            .OrderBy(x=>x.Id)
+            .ToListAsync();
+
+
+    public async Task<IEnumerable<CardHome>> GetCardsHome()
     {
         var assessments = await _appDbContext.Assessments
         .Select(c => new CardHome(c.Id, c.ImagePath))
@@ -26,17 +39,11 @@ public class AssessmentsRepository : IAssessmentsRepository
         return CardHome.GetCardsHome(assessments);
     }
 
-    public async Task<Assessments> GetByIdAsync(int id)
-    {
-        var assessment = await _appDbContext.Assessments
-            .FirstOrDefaultAsync(x => x.Id == id);
 
-        return assessment;
-    }
 
-    public async Task PostAll(Assessments assessments)
+    public async Task PostAll(IEnumerable<Assessments> assessments)
     {
-        await _appDbContext.Assessments.AddAsync(assessments);
+        await _appDbContext.Assessments.AddRangeAsync(assessments);
         await _appDbContext.SaveChangesAsync();
     }
 

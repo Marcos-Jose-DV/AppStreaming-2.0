@@ -23,25 +23,33 @@
 
     <ContentPage.MenuBarItems >
         <MenuBarItem Text="Baixar">
-            <MenuFlyoutItem Text="Excel">
+            <MenuFlyoutItem Text="Excel"
+                            Command="{Binding DowloandFileCommand}"
+                            CommandParameter="assessments.xlsx">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128202;"
-                                 FontFamily="Arial" />
+                                    FontFamily="Arial" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="PDF">
+            <MenuFlyoutItem Text="PDF"
+                            Command="{Binding DowloandFileCommand}"
+                            CommandParameter="assessments.pdf">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128196;"
                                  FontFamily="Arial" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Wold">
+            <MenuFlyoutItem Text="Wold"
+                            Command="{Binding DowloandFileCommand}"
+                            CommandParameter="assessments.docx">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128195;"
                                  FontFamily="Arial" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="TXT">
+            <MenuFlyoutItem Text="TXT"
+                            Command="{Binding DowloandFileCommand}"
+                            CommandParameter="assessments.txt">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128221;"
                      FontFamily="Arial" />
@@ -50,7 +58,8 @@
         </MenuBarItem>
 
         <MenuBarItem Text="Inporta">
-            <MenuFlyoutItem Text="Excel">
+            <MenuFlyoutItem Text="Excel"
+                            Command="{Binding UploadFileCommand}">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128202;"
                          FontFamily="Arial" />

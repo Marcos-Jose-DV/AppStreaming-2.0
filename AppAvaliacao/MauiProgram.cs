@@ -1,6 +1,7 @@
 ﻿using AppAvaliacao.Pages;
 using AppAvaliacao.ViewModels;
 using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Storage;
 using DataBase.Data;
 using Microsoft.Extensions.Logging;
 using Microsoft.Maui.LifecycleEvents;
@@ -18,6 +19,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkitMediaElement()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -31,6 +33,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<DetailsPage>();
         builder.Services.AddSingleton<DetailsViewModel>();
         builder.Services.AddScoped<AppDbContext>();
+        builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
 
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>

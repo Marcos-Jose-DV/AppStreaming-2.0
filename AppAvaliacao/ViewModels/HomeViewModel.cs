@@ -1,27 +1,33 @@
 ﻿using AppAvaliacao.Components;
-using AppAvaliacao.Helpers;
+using AppAvaliacao.Helpers.DownloadHelper;
+using AppAvaliacao.Helpers.ExcelHerper;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Models;
 using Models.Movies;
 using Repository.Interfaces;
-using System.Collections.ObjectModel;
 
 namespace AppAvaliacao.ViewModels;
 
 public partial class HomeViewModel : ObservableObject
 {
     private readonly IAssessmentsRepository _assessmentsRepository;
+    private readonly IFileSaver _fileSaver;
+
     [ObservableProperty]
     IEnumerable<CardHome> _cardsHome;
 
     [ObservableProperty]
     Assessments _assessment = new();
 
-    public HomeViewModel(IAssessmentsRepository assessmentsRepository)
+    public HomeViewModel(IAssessmentsRepository assessmentsRepository, IFileSaver fileSaver)
     {
         _assessmentsRepository = assessmentsRepository;
+        _fileSaver = fileSaver;
+
         FormComponent.SaveCommand = new Command(async () =>
         {
             await Save();
@@ -53,7 +59,7 @@ public partial class HomeViewModel : ObservableObject
 
     private async Task Get()
     {
-        CardsHome = await _assessmentsRepository.GetAllAsync();
+        CardsHome = await _assessmentsRepository.GetCardsHome();
     }
 
     [RelayCommand]
@@ -78,7 +84,41 @@ public partial class HomeViewModel : ObservableObject
             return;
         }
 
-        CardsHome = await _assessmentsRepository.GetAllAsync();
+        CardsHome = await _assessmentsRepository.GetCardsHome();
+    }
+    [RelayCommand]
+    async Task DowloandFile(string fileName)
+    {
+        var assessments = await _assessmentsRepository.GetAllAssessments();
+        var stream = DownloadFileHerper.DownloadFile(fileName, assessments);
+
+        var cancellationToken = new CancellationToken();
+        try
+        {
+            var fileLocationResult = await _fileSaver.SaveAsync(fileName, stream, cancellationToken);
+            fileLocationResult.EnsureSuccess();
+            await stream.DisposeAsync();
+            await Toast.Make($"Arquivo salvo em: {fileLocationResult.FilePath}").Show(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make($"O arquivo não foi salvo: {ex.Message}").Show(cancellationToken);
+        }
+    }
+    [RelayCommand]
+    async Task UploadFile(CancellationToken cancellationToken)
+    {
+        try
+        {
+            var uploadExcelHelper = new UploadExcelHelper();
+            IEnumerable<Assessments> assessments = await uploadExcelHelper.ReadExcel();
+            await _assessmentsRepository.PostAll(assessments);
+            await Toast.Make($"Arquivo foi carregado com sucesso.").Show(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            await Toast.Make($"Erro ao carregar arquivo: {ex.Message}").Show(cancellationToken);
+        }
     }
 
 }
