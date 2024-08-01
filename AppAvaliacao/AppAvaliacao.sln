@@ -5,15 +5,15 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppAvaliacao", "AppAvaliacao.csproj", "{C9B638F3-E637-46EC-876B-4C68821DBD01}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUpload", "..\Componetes\Net maui\Files\FileUpload\FileUpload\FileUpload.csproj", "{761BC0D0-68EB-4453-8993-0CD904EAABDE}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "..\Models\Models.csproj", "{40C8278A-F888-4E45-BF37-136F66886ABB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repository", "..\Repository\Repository.csproj", "{5864C974-0E09-44FF-A538-ADA5F8EA4982}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repository", "..\Repository\Repository.csproj", "{5864C974-0E09-44FF-A538-ADA5F8EA4982}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase", "..\DataBase\DataBase.csproj", "{304E4050-F68E-4476-9B3D-F8F072482563}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataBase", "..\DataBase\DataBase.csproj", "{304E4050-F68E-4476-9B3D-F8F072482563}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataBase.Rune", "..\DataBase.Rune\DataBase.Rune.csproj", "{0C50C817-429D-4A53-B59E-5DE6C8FDA372}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FileUpload", "..\Componentes\Net maui\Files\FileUpload\FileUpload\FileUpload.csproj", "{4EB232E2-7CA2-4B15-955F-9B3F69C6E6F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,10 +27,6 @@ Global
 		{C9B638F3-E637-46EC-876B-4C68821DBD01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9B638F3-E637-46EC-876B-4C68821DBD01}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9B638F3-E637-46EC-876B-4C68821DBD01}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{761BC0D0-68EB-4453-8993-0CD904EAABDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{761BC0D0-68EB-4453-8993-0CD904EAABDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{761BC0D0-68EB-4453-8993-0CD904EAABDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{761BC0D0-68EB-4453-8993-0CD904EAABDE}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40C8278A-F888-4E45-BF37-136F66886ABB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40C8278A-F888-4E45-BF37-136F66886ABB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40C8278A-F888-4E45-BF37-136F66886ABB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,6 +43,10 @@ Global
 		{0C50C817-429D-4A53-B59E-5DE6C8FDA372}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0C50C817-429D-4A53-B59E-5DE6C8FDA372}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0C50C817-429D-4A53-B59E-5DE6C8FDA372}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EB232E2-7CA2-4B15-955F-9B3F69C6E6F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EB232E2-7CA2-4B15-955F-9B3F69C6E6F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EB232E2-7CA2-4B15-955F-9B3F69C6E6F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EB232E2-7CA2-4B15-955F-9B3F69C6E6F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -81,7 +81,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Componetes\Net maui\Files\FileUpload\FileUpload\FileUpload.csproj" />
 	  <ProjectReference Include="..\Models\Models.csproj" />
 	  <ProjectReference Include="..\Repository\Repository.csproj" />
 	</ItemGroup>
