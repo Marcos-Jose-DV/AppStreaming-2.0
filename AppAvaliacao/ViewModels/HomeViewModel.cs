@@ -1,6 +1,7 @@
 ﻿using AppAvaliacao.Components;
 using AppAvaliacao.Helpers.DownloadHelper;
 using AppAvaliacao.Helpers.ExcelHerper;
+using AppAvaliacao.Services;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Storage;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -14,6 +15,7 @@ namespace AppAvaliacao.ViewModels;
 
 public partial class HomeViewModel : ObservableObject
 {
+    private readonly RestService _restService;
     private readonly IAssessmentsRepository _assessmentsRepository;
     private readonly IFileSaver _fileSaver;
 
@@ -23,10 +25,12 @@ public partial class HomeViewModel : ObservableObject
     [ObservableProperty]
     Assessments _assessment = new();
 
-    public HomeViewModel(IAssessmentsRepository assessmentsRepository, IFileSaver fileSaver)
+    public HomeViewModel(IAssessmentsRepository assessmentsRepository, IFileSaver fileSaver, RestService restService)
     {
         _assessmentsRepository = assessmentsRepository;
         _fileSaver = fileSaver;
+        _restService = restService;
+
 
         FormComponent.SaveCommand = new Command(async () =>
         {
@@ -60,6 +64,18 @@ public partial class HomeViewModel : ObservableObject
     private async Task Get()
     {
         CardsHome = await _assessmentsRepository.GetCardsHome();
+
+        //var cards = await _restService.GetMovies();
+        //var carsHome = new List<CardHome>();    
+
+        //foreach(var card in cards)
+        //{
+        //    var cardHome = new CardHome(card.Id, $"{AppSettings.ImageBaseUrl}{card.poster_path}");
+
+        //    carsHome.Add(cardHome);
+        //}
+
+        //CardsHome = carsHome;
     }
 
     [RelayCommand]
@@ -120,5 +136,4 @@ public partial class HomeViewModel : ObservableObject
             await Toast.Make($"Erro ao carregar arquivo: {ex.Message}").Show(cancellationToken);
         }
     }
-
 }

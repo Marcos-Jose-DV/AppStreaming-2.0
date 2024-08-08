@@ -39,7 +39,7 @@
                                  FontFamily="Arial" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Wold"
+            <MenuFlyoutItem Text="Word"
                             Command="{Binding DowloandFileCommand}"
                             CommandParameter="assessments.docx">
                 <MenuFlyoutItem.IconImageSource>
@@ -57,7 +57,7 @@
             </MenuFlyoutItem>
         </MenuBarItem>
 
-        <MenuBarItem Text="Inporta">
+        <MenuBarItem Text="Upload">
             <MenuFlyoutItem Text="Excel"
                             Command="{Binding UploadFileCommand}">
                 <MenuFlyoutItem.IconImageSource>
@@ -71,7 +71,7 @@
                          FontFamily="Arial" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Wold">
+            <MenuFlyoutItem Text="Word">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128195;"
                          FontFamily="Arial" />
@@ -86,7 +86,7 @@
         </MenuBarItem>
     </ContentPage.MenuBarItems>
     
-    <Grid x:Name="GridContainer">
+    <Grid x:Name="GridContainer" RowDefinitions="*">
         <Button ZIndex="2"
                 HorizontalOptions="End"
                 VerticalOptions="End"

@@ -26,12 +26,12 @@ public partial class PlayViewModel : ObservableObject, IQueryAttributable
         Assessments assessment = (Assessments)query["Data"];
         if (assessment.Category != "Book")
         {
-            string pathFile = Load(assessment.Name, AppSettings.pathMovie);
+            string pathFile = Load(assessment.Name, AppSettings.PathMovie);
             Video.Source = MediaSource.FromFile(pathFile);
         }
         else
         {
-            string pathFile = Load(assessment.Name, AppSettings.pathBook);
+            string pathFile = Load(assessment.Name, AppSettings.PathBook);
             IsBook = "file:///" + pathFile;
         }
     }

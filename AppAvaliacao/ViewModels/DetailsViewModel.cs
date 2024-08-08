@@ -12,7 +12,7 @@ public partial class DetailsViewModel : ObservableObject, IQueryAttributable
 {
     private readonly IAssessmentsRepository _assessmentsRepository;
     [ObservableProperty]
-    Assessments _assessment = new();
+    Assessments _assessment;
 
     [ObservableProperty]
     string[] _categories;
@@ -35,7 +35,7 @@ public partial class DetailsViewModel : ObservableObject, IQueryAttributable
 
     public async void ApplyQueryAttributes(IDictionary<string, object> query)
     {
-        Assessment = null;
+        Assessment = new();
         var id = query["Id"];
 
         Assessment = await _assessmentsRepository.GetByIdAsync(Convert.ToInt32(id));
@@ -43,13 +43,12 @@ public partial class DetailsViewModel : ObservableObject, IQueryAttributable
     async Task Save()
     {
         var assessment = await _assessmentsRepository.UpdateAsync(Assessment);
-        Assessment = null;
+        Assessment = new();
         Assessment = assessment;
         var formComponent = new FormComponent();
         await formComponent.CloseForm();
 
         WeakReferenceMessenger.Default.Send<string>("save");
-
     }
 
     [RelayCommand]

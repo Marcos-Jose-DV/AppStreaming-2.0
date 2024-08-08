@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Excel;
 using FileUpload.PickFile;
+using Microsoft.Maui.Storage;
 using Models.Movies;
 namespace AppAvaliacao.Helpers.ExcelHerper;
 
@@ -7,7 +8,8 @@ public class UploadExcelHelper
 {
     public async Task<IEnumerable<Assessments>> ReadExcel()
     {
-        var result = await PickerFileHelper.PickerImage();
+        var result = await PickerFileHelper.PickerImage() ?? throw new Exception("Nenhuma arquivo foi selecionado");
+
         using var fileStream = new FileStream(result.FullPath, FileMode.Open);
 
         using var workbook = new XLWorkbook(fileStream);

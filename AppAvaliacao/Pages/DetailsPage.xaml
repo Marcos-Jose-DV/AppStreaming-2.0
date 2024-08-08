@@ -131,7 +131,7 @@
                        HorizontalOptions="Center"
                        WidthRequest="650"
                        Margin="0,0,0,0"
-                       Source="{Binding Assessment.ImagePath}" 
+                       Source="{Binding Assessment.ImagePathBackDrop}" 
                        Aspect="AspectFill" />
                 <BoxView Grid.Column="1" 
                          BackgroundColor="#041218" 

@@ -1,4 +1,5 @@
 ﻿using AppAvaliacao.Pages;
+using AppAvaliacao.Services;
 using AppAvaliacao.ViewModels;
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Storage;
@@ -34,6 +35,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<DetailsViewModel>();
         builder.Services.AddScoped<AppDbContext>();
         builder.Services.AddSingleton<IFileSaver>(FileSaver.Default);
+        builder.Services.AddTransient<HttpClient>();
+        builder.Services.AddSingleton<RestService>();
 
 #if WINDOWS
         builder.ConfigureLifecycleEvents(events =>

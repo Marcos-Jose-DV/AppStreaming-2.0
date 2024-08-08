@@ -18,6 +18,7 @@ public class Assessments
     [Required, MaxLength(100)]
     public string Director { get; set; }
     public string ImagePath { get; set; }
+    public string ImagePathBackDrop { get; set; }
 
     [Required, MaxLength(100)]
     public string Gender { get; set; }

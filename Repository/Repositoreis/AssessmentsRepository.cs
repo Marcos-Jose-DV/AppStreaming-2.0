@@ -28,7 +28,6 @@ public class AssessmentsRepository : IAssessmentsRepository
             .OrderBy(x=>x.Id)
             .ToListAsync();
 
-
     public async Task<IEnumerable<CardHome>> GetCardsHome()
     {
         var assessments = await _appDbContext.Assessments
@@ -38,8 +37,6 @@ public class AssessmentsRepository : IAssessmentsRepository
 
         return CardHome.GetCardsHome(assessments);
     }
-
-
 
     public async Task PostAll(IEnumerable<Assessments> assessments)
     {
