@@ -87,23 +87,22 @@ public partial class HomeViewModel : ObservableObject
     [RelayCommand]
     async Task Detail(int id)
     {
-        if (_filter != "Api")
+        try
         {
-
-            try
+            if (_filter != "Api")
             {
                 await Shell.Current.GoToAsync($"DetailsPage?Id={id}");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"{ex.Message} - {ex.StackTrace} - {ex.InnerException.Message}");
+
+                return;
             }
 
-            return;
+            Assessment = await _restService.GetAssessmentsAsync(id);
+            WeakReferenceMessenger.Default.Send<string>("Add");
         }
-
-        Assessment = await _restService.GetAssessmentsAsync(id);
-        WeakReferenceMessenger.Default.Send<string>("Add");
+        catch (Exception ex)
+        {
+            await Toast.Make(ex.Message).Show(new CancellationToken());
+        }
     }
     [RelayCommand]
     async Task Filter(string filter)

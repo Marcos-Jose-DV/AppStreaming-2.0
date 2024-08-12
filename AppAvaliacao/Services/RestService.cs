@@ -1,7 +1,9 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using Models.ApiTmdb;
 using Models.Movies;
+using System.Net;
 using System.Net.Http.Headers;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -85,28 +87,37 @@ public class RestService
                     movie.ImagePath = posterFilePath;
                 }
             }
-            catch (Exception e)
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
             {
-                throw e;
+                throw new HttpRequestException("Token expirado ou credenciais inválidas.");
+            }
+            catch (AuthenticationException ex)
+            {
+                throw new AuthenticationException("Erro de autenticação: " + ex.Message);
+            }
+            catch (JsonException ex)
+            {
+                throw new JsonException($"Erro ao deserializar JSON: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Erro ao verificar dados do filme.");
             }
         }
-
-
         return movie;
     }
     public async Task<List<Movies>> GetMovies()
     {
         var movies = new List<Movies>();
-        for (int i = 0; i < 10; i++)
+        for (int i = 100; i < 200; i++)
         {
-
-            HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={i}");
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var jsonString = await response.Content.ReadAsStreamAsync();
-                try
+                HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={i}");
+
+                if (response.IsSuccessStatusCode)
                 {
+                    var jsonString = await response.Content.ReadAsStreamAsync();
                     var result = await JsonSerializer.DeserializeAsync<MovieResults>(jsonString, _jsonOptions);
 
                     foreach (var movie in result.Results)
@@ -128,14 +139,22 @@ public class RestService
                         //}
                     }
                 }
-                catch (Exception e)
-                {
-                    throw e;
-                }
             }
-            else
+            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
             {
-                Console.WriteLine($"Error: {response.StatusCode}");
+                throw new HttpRequestException("Token expirado ou credenciais inválidas.");
+            }
+            catch (AuthenticationException ex)
+            {
+                throw new AuthenticationException("Erro de autenticação: " + ex.Message);
+            }
+            catch (JsonException ex)
+            {
+                throw new JsonException($"Erro ao deserializar JSON: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Erro ao verificar dados do filme. {ex.Message}");
             }
         }
 
