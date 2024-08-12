@@ -56,7 +56,6 @@ public class FormComponent
 
         return _frame;
     }
-
     private void SetAssessment()
     {
         var grid = GetTitle();

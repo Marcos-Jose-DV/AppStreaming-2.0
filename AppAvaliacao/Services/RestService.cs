@@ -1,7 +1,10 @@
-﻿using Models.ApiTmdb;
+﻿using CommunityToolkit.Maui.Alerts;
+using Models.ApiTmdb;
+using Models.Movies;
 using System.Net.Http.Headers;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 
 namespace AppAvaliacao.Services;
@@ -10,8 +13,6 @@ public class RestService
 {
     private readonly HttpClient _httpClient;
     JsonSerializerOptions _jsonOptions;
-
-
     public RestService()
     {
         _httpClient = new HttpClient();
@@ -22,10 +23,81 @@ public class RestService
             PropertyNameCaseInsensitive = true,
         };
     }
-    public async Task<List<Movie>> GetMovies()
+    public async Task<Assessments> GetAssessmentsAsync(int id)
     {
-        var movies = new List<Movie>();
-        for (int i = 0; i < 100; i++)
+        var movie = new Assessments();
+
+
+        HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/movie/{id}?append_to_response=credits&language=pt-BR");
+
+        if (response.IsSuccessStatusCode)
+        {
+            var jsonString = await response.Content.ReadAsStreamAsync();
+            try
+            {
+                var result = await JsonSerializer.DeserializeAsync<MovieDetails>(jsonString, _jsonOptions);
+                movie.Name = result.title;
+                movie.Launch = DateTime.Parse(result.release_date);
+
+                movie.Gender = string.Join(", ", result.genres.Select(g => g.Name));
+                movie.Duration = result.runtime;
+                movie.Category = "Movie";
+
+
+                if (result.Credits != null && result.Credits.Crew != null)
+                {
+                    var director = result.Credits.Crew
+                        .FirstOrDefault(c => c.Job == "Director");
+
+                    if (director != null)
+                    {
+                        movie.Director = director.Name;
+                    }
+                }
+                else
+                {
+                    movie.Director = "vazio";
+                }
+
+                if (!string.IsNullOrEmpty(result.backdrop_path))
+                {
+                    string backdropUrl = $"{AppSettings.ImageBaseUrl}{result.backdrop_path}";
+                    string backdropFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(result.title)}_backdrop.jpg");
+
+                    bool backdropExists = File.Exists(backdropFilePath);
+                    if (!backdropExists)
+                    {
+                        await DownloadImageAsync(backdropUrl, backdropFilePath);
+                    }
+                    movie.ImagePathBackDrop = backdropFilePath;
+                }
+
+                if (!string.IsNullOrEmpty(result.poster_path))
+                {
+                    string posterUrl = $"{AppSettings.ImageBaseUrl}{result.poster_path}";
+                    string posterFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(result.title)}_poster.jpg");
+
+                    bool posterExist = File.Exists(posterFilePath);
+                    if (!posterExist)
+                    {
+                        await DownloadImageAsync(posterUrl, posterFilePath);
+                    }
+                    movie.ImagePath = posterFilePath;
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+        }
+
+
+        return movie;
+    }
+    public async Task<List<Movies>> GetMovies()
+    {
+        var movies = new List<Movies>();
+        for (int i = 0; i < 10; i++)
         {
 
             HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={i}");
@@ -71,6 +143,7 @@ public class RestService
     }
     private async Task DownloadImageAsync(string imageUrl, string filePath)
     {
+        var cancellationToken = new CancellationToken();
         try
         {
             var fileExiste = File.Exists(filePath);
@@ -84,13 +157,13 @@ public class RestService
                     Directory.CreateDirectory(Path.GetDirectoryName(filePath));
                     await File.WriteAllBytesAsync(filePath, imageBytes);
 
-                    Console.WriteLine($"Downloaded and saved image to {filePath}");
+                    await Toast.Make($"Arquivo salvo em: {filePath}").Show(cancellationToken);
                 }
             }
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Failed to download image from {imageUrl}: {ex.Message}");
+            await Toast.Make($"O arquivo não foi salvo: {ex.Message}").Show(cancellationToken);
         }
     }
     public static string SanitizeFilename(string filename)

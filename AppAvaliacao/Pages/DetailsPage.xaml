@@ -74,10 +74,12 @@
                             </Grid>
                         </Border>
 
-                        <VerticalStackLayout Grid.Column="1" 
+                        <VerticalStackLayout Grid.Column="1"
                                              MaximumWidthRequest="1800">
 
                             <Label Text="{Binding Assessment.Name}"
+                                   LineBreakMode="WordWrap"
+                                   WidthRequest="300"
                                    FontSize="24"/>
 
                             <HorizontalStackLayout>

@@ -47,8 +47,6 @@ public partial class DetailsViewModel : ObservableObject, IQueryAttributable
         Assessment = assessment;
         var formComponent = new FormComponent();
         await formComponent.CloseForm();
-
-        WeakReferenceMessenger.Default.Send<string>("save");
     }
 
     [RelayCommand]

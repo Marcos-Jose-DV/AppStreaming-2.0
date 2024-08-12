@@ -1,5 +1,6 @@
 using AppAvaliacao.Components;
 using AppAvaliacao.ViewModels;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace AppAvaliacao.Pages;
 
@@ -9,6 +10,14 @@ public partial class HomePage : ContentPage
     {
         InitializeComponent();
         BindingContext = vm;
+
+        WeakReferenceMessenger.Default.Register<string>(this, async (e, msg) =>
+        {
+            if (msg.Equals("Add"))
+            {
+                await ShowForm();
+            }
+        });
     }
 
     private void OnPointerEntered(object sender, PointerEventArgs e)
@@ -35,6 +44,13 @@ public partial class HomePage : ContentPage
     }
 
     private async void AddAssessment(object sender, EventArgs e)
+    {
+        await ShowForm();
+
+       
+    }
+
+    private async Task ShowForm()
     {
         var formComponent = new FormComponent();
         var frame = formComponent.AddFrameToGrid();

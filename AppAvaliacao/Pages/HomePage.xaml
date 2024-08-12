@@ -85,7 +85,7 @@
             </MenuFlyoutItem>
         </MenuBarItem>
     </ContentPage.MenuBarItems>
-    
+
     <Grid x:Name="GridContainer" RowDefinitions="*">
         <Button ZIndex="2"
                 HorizontalOptions="End"
@@ -101,13 +101,29 @@
             <VerticalStackLayout>
                 <!-- Header -->
                 <VerticalStackLayout>
-                    <HorizontalStackLayout BackgroundColor="#202380" Padding="10">
+                    <StackLayout Orientation="Horizontal" BackgroundColor="#202380" Padding="10">
                         <Button Text="Inicio" Command="{Binding FilterCommand}" CommandParameter="All"/>
                         <Button Text="Filmes" Command="{Binding FilterCommand}" CommandParameter="Movie"/>
                         <Button Text="Séries" Command="{Binding FilterCommand}" CommandParameter="Séries"/>
                         <Button Text="Livros" Command="{Binding FilterCommand}" CommandParameter="Book"/>
                         <Button Text="Musicas" Command="{Binding FilterCommand}" CommandParameter="Music"/>
-                    </HorizontalStackLayout>
+                        <Button Text="🛜" Command="{Binding FilterCommand}" CommandParameter="Api"/>
+
+                        <Border HorizontalOptions="EndAndExpand"
+                                StrokeShape="RoundRectangle 20"
+                                Stroke="Transparent">
+
+                            <SearchBar x:Name="searchBar"
+                                       Placeholder="Pesquisar"
+                                       HorizontalOptions="EndAndExpand"
+                                       WidthRequest="300"
+                                       BackgroundColor="White"
+                                       CancelButtonColor="#202380"
+                                       SearchCommand="{Binding SearchTmdbCommand}"
+                                       SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"
+                                       />
+                        </Border>
+                    </StackLayout>
                 </VerticalStackLayout>
 
                 <!-- Body -->

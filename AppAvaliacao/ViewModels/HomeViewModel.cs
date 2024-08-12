@@ -10,6 +10,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Models;
 using Models.Movies;
 using Repository.Interfaces;
+using System.Threading;
 
 namespace AppAvaliacao.ViewModels;
 
@@ -24,6 +25,8 @@ public partial class HomeViewModel : ObservableObject
 
     [ObservableProperty]
     Assessments _assessment = new();
+
+    string _filter;
 
     public HomeViewModel(IAssessmentsRepository assessmentsRepository, IFileSaver fileSaver, RestService restService)
     {
@@ -43,64 +46,93 @@ public partial class HomeViewModel : ObservableObject
             await formComponent.CloseForm();
         });
 
-        WeakReferenceMessenger.Default.Register<string>(this, (e, msg) =>
-        {
-            Get();
-        });
-
-
         Get();
     }
     async Task Save()
     {
-        await _assessmentsRepository.PostAsync(Assessment);
-        var formComponent = new FormComponent();
-        await formComponent.CloseForm();
+        var cancellationToken = new CancellationToken();
+        try
+        {
+            if (Assessment.Assessment is not null)
+            {
+                await _assessmentsRepository.PostAsync(Assessment);
+                var formComponent = new FormComponent();
+                await formComponent.CloseForm();
+                Assessment = new();
 
-        Assessment = new();
-        await Get();
+                if (_filter != "Api")
+                {
+                    await Get();
+                }
+
+                await Toast.Make($"A avaliação foi salva com sucesso.").Show(cancellationToken);
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Nota", "Nota não foi preenchida", "Ok");
+            }
+        }
+        catch (Exception e)
+        {
+            await Toast.Make($"Error ao salvar a avaliação: {e.Message}.").Show(cancellationToken);
+        }
     }
 
     private async Task Get()
     {
+        _filter = "home";
         CardsHome = await _assessmentsRepository.GetCardsHome();
-
-        //var cards = await _restService.GetMovies();
-        //var carsHome = new List<CardHome>();    
-
-        //foreach(var card in cards)
-        //{
-        //    var cardHome = new CardHome(card.Id, $"{AppSettings.ImageBaseUrl}{card.poster_path}");
-
-        //    carsHome.Add(cardHome);
-        //}
-
-        //CardsHome = carsHome;
     }
 
     [RelayCommand]
     async Task Detail(int id)
     {
-        try
+        if (_filter != "Api")
         {
-            await Shell.Current.GoToAsync($"DetailsPage?Id={id}");
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"{ex.Message} - {ex.StackTrace} - {ex.InnerException.Message}");
-        }
-    }
-    [RelayCommand]
-    async Task Filter(string filter)
-    {
-        if (filter != "All")
-        {
-            CardsHome = await _assessmentsRepository.GetFilterAsync(filter);
+
+            try
+            {
+                await Shell.Current.GoToAsync($"DetailsPage?Id={id}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{ex.Message} - {ex.StackTrace} - {ex.InnerException.Message}");
+            }
 
             return;
         }
 
-        CardsHome = await _assessmentsRepository.GetCardsHome();
+        Assessment = await _restService.GetAssessmentsAsync(id);
+        WeakReferenceMessenger.Default.Send<string>("Add");
+    }
+    [RelayCommand]
+    async Task Filter(string filter)
+    {
+        _filter = filter;
+        if (_filter == "All")
+        {
+            CardsHome = await _assessmentsRepository.GetCardsHome();
+
+            return;
+        }
+
+        if (_filter == "Api")
+        {
+            var cards = await _restService.GetMovies();
+            var carsHome = new List<CardHome>();
+
+            foreach (var card in cards)
+            {
+                var cardHome = new CardHome(card.Id, $"{AppSettings.ImageBaseUrl}{card.poster_path}");
+
+                carsHome.Add(cardHome);
+            }
+
+            CardsHome = carsHome;
+            return;
+        }
+
+        CardsHome = await _assessmentsRepository.GetFilterAsync(filter);
     }
     [RelayCommand]
     async Task DowloandFile(string fileName)
@@ -134,6 +166,15 @@ public partial class HomeViewModel : ObservableObject
         catch (Exception ex)
         {
             await Toast.Make($"Erro ao carregar arquivo: {ex.Message}").Show(cancellationToken);
+        }
+    }
+
+    [RelayCommand]
+    async Task SearchTmdb(string text)
+    {
+        if (_filter != "Api")
+        {
+            CardsHome = await _assessmentsRepository.GetNameAsync(text);
         }
     }
 }

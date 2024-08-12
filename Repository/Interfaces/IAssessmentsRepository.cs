@@ -11,6 +11,7 @@ public interface  IAssessmentsRepository
     Task<List<Assessments>> GetAllAssessments();
     Task<IEnumerable<CardHome>> GetCardsHome();
     Task<IEnumerable<CardHome>> GetFilterAsync(string filter);
+    Task<IEnumerable<CardHome>> GetNameAsync(string name);
     Task<Assessments> GetByIdAsync(int id);
     Task PostAsync(Assessments assessment);
     Task<Assessments> UpdateAsync(Assessments assessment);

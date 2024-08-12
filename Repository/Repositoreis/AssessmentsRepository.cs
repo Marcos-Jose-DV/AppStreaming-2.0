@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Movies;
 using Repository.Interfaces;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Repository.Repositoreis;
 
@@ -25,9 +26,8 @@ public class AssessmentsRepository : IAssessmentsRepository
     }
     public async Task<List<Assessments>> GetAllAssessments()
         => await _appDbContext.Assessments
-            .OrderBy(x=>x.Id)
+            .OrderBy(x => x.Id)
             .ToListAsync();
-
     public async Task<IEnumerable<CardHome>> GetCardsHome()
     {
         var assessments = await _appDbContext.Assessments
@@ -37,20 +37,23 @@ public class AssessmentsRepository : IAssessmentsRepository
 
         return CardHome.GetCardsHome(assessments);
     }
-
     public async Task PostAll(IEnumerable<Assessments> assessments)
     {
         await _appDbContext.Assessments.AddRangeAsync(assessments);
         await _appDbContext.SaveChangesAsync();
     }
-
     public async Task PostAsync(Assessments assessment)
     {
+        var assessmentExist = await _appDbContext.Assessments.AnyAsync(a => a.Name == assessment.Name);
+        if (assessmentExist)
+        {
+            throw new InvalidOperationException("Essa avaliação já existe no banco de dados");
+        }
+
         assessment.LastUpdate = DateTime.UtcNow;
         await _appDbContext.Assessments.AddAsync(assessment);
         await _appDbContext.SaveChangesAsync();
     }
-
     public async Task<Assessments> UpdateAsync(Assessments assessment)
     {
         var newValue = await _appDbContext.Assessments
@@ -77,7 +80,6 @@ public class AssessmentsRepository : IAssessmentsRepository
 
         return newValue;
     }
-
     public async Task DeleteAsync(int id)
     {
         var assessment = _appDbContext.Assessments
@@ -86,7 +88,6 @@ public class AssessmentsRepository : IAssessmentsRepository
         _appDbContext.Assessments.Remove(assessment);
         await _appDbContext.SaveChangesAsync();
     }
-
     public async Task<IEnumerable<CardHome>> GetFilterAsync(string filter)
     {
         var assessments = await _appDbContext.Assessments
@@ -96,5 +97,20 @@ public class AssessmentsRepository : IAssessmentsRepository
              .ToListAsync();
 
         return CardHome.GetCardsHome(assessments);
+    }
+    public async Task<IEnumerable<CardHome>> GetNameAsync(string name)
+    {
+        var assessment = await _appDbContext.Assessments
+        .Where(x => x.Name.ToLower().Contains(name.ToLower()))
+        .Select(c => new CardHome(c.Id, c.ImagePath))
+        .AsNoTracking()
+        .ToListAsync();
+
+        if (assessment == null)
+        {
+            return null;
+        }
+
+        return assessment;
     }
 }
