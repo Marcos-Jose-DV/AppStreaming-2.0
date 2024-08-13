@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Movies;
 using Repository.Interfaces;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Repository.Repositoreis;
 
@@ -15,8 +14,6 @@ public class AssessmentsRepository : IAssessmentsRepository
     {
         _appDbContext = appDbContext;
     }
-
-
     public async Task<Assessments> GetByIdAsync(int id)
     {
         var assessment = await _appDbContext.Assessments
@@ -28,14 +25,16 @@ public class AssessmentsRepository : IAssessmentsRepository
         => await _appDbContext.Assessments
             .OrderBy(x => x.Id)
             .ToListAsync();
-    public async Task<IEnumerable<CardHome>> GetCardsHome()
+    public async Task<IEnumerable<CardHome>> GetCardsHome(int page = 1)
     {
         var assessments = await _appDbContext.Assessments
-        .Select(c => new CardHome(c.Id, c.ImagePath))
+        .Select(c => new CardHome(c.Id, c.ImagePath, c.Assessment))
+        .Skip((page -1) * 20)
+        .Take(20)
         .AsNoTracking()
         .ToListAsync();
 
-        return CardHome.GetCardsHome(assessments);
+        return assessments;
     }
     public async Task PostAll(IEnumerable<Assessments> assessments)
     {
@@ -92,7 +91,7 @@ public class AssessmentsRepository : IAssessmentsRepository
     {
         var assessments = await _appDbContext.Assessments
              .Where(x => x.Category == filter)
-             .Select(x => new CardHome(x.Id, x.ImagePath))
+             .Select(x => new CardHome(x.Id, x.ImagePath, x.Assessment))
              .AsNoTracking()
              .ToListAsync();
 
@@ -102,7 +101,7 @@ public class AssessmentsRepository : IAssessmentsRepository
     {
         var assessment = await _appDbContext.Assessments
         .Where(x => x.Name.ToLower().Contains(name.ToLower()))
-        .Select(c => new CardHome(c.Id, c.ImagePath))
+        .Select(c => new CardHome(c.Id, c.ImagePath, c.Assessment))
         .AsNoTracking()
         .ToListAsync();
 

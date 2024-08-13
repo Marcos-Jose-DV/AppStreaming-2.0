@@ -28,6 +28,11 @@ public partial class HomeViewModel : ObservableObject
 
     string _filter;
 
+    [ObservableProperty]
+    int _page = 1;
+    [ObservableProperty]
+    bool _isBusy;
+
     public HomeViewModel(IAssessmentsRepository assessmentsRepository, IFileSaver fileSaver, RestService restService)
     {
         _assessmentsRepository = assessmentsRepository;
@@ -72,9 +77,9 @@ public partial class HomeViewModel : ObservableObject
                 await Shell.Current.DisplayAlert("Nota", "Nota não foi preenchida", "Ok");
             }
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            await Toast.Make($"Error ao salvar a avaliação: {e.Message}.").Show(cancellationToken);
+            await Toast.Make($"Error ao salvar a avaliação: {ex.Message}.").Show(cancellationToken);
         }
     }
 
@@ -107,34 +112,47 @@ public partial class HomeViewModel : ObservableObject
     [RelayCommand]
     async Task Filter(string filter)
     {
-        _filter = filter;
-        if (_filter == "All")
+        try
         {
-            CardsHome = await _assessmentsRepository.GetCardsHome();
-
-            return;
-        }
-
-        if (_filter == "Api")
-        {
-            var cards = await _restService.GetMovies();
-            var carsHome = new List<CardHome>();
-
-            foreach (var card in cards)
+            IsBusy = !IsBusy;
+            CardsHome = null;
+            _filter = filter;
+            if (_filter == "All")
             {
-                var cardHome = new CardHome(card.Id, $"{AppSettings.ImageBaseUrl}{card.poster_path}");
+                Page = 1;
+                CardsHome = await _assessmentsRepository.GetCardsHome(Page);
 
-                carsHome.Add(cardHome);
+                return;
             }
 
-            CardsHome = carsHome;
-            return;
-        }
+            if (_filter == "Api")
+            {
+                var cards = await _restService.GetMovies(Page);
+                var carsHome = new List<CardHome>();
 
-        CardsHome = await _assessmentsRepository.GetFilterAsync(filter);
+                foreach (var card in cards)
+                {
+                    var cardHome = new CardHome(
+                        card.Id,
+                        $"{AppSettings.ImageBaseUrl}{card.poster_path}",
+                        card.popularity.ToString());
+
+                    carsHome.Add(cardHome);
+                }
+
+                CardsHome = carsHome;
+                return;
+            }
+
+            CardsHome = await _assessmentsRepository.GetFilterAsync(filter);
+        }
+        finally
+        {
+            IsBusy = !IsBusy;
+        }
     }
     [RelayCommand]
-    async Task DowloandFile(string fileName)
+    async Task DownloadFile(string fileName)
     {
         var assessments = await _assessmentsRepository.GetAllAssessments();
         var stream = DownloadFileHerper.DownloadFile(fileName, assessments);
@@ -175,5 +193,25 @@ public partial class HomeViewModel : ObservableObject
         {
             CardsHome = await _assessmentsRepository.GetNameAsync(text);
         }
+    }
+
+    [RelayCommand]
+    async Task NextPage()
+    {
+       Page += 1;
+       await SelectPage();
+    }
+    [RelayCommand]
+    async Task BackPage()
+    {
+        if (Page > 1)
+        {
+            Page -= 1;
+            await SelectPage();
+        }
+    }
+    public async Task SelectPage()
+    {
+        await Filter(_filter);
     }
 }

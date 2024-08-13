@@ -48,17 +48,19 @@ public class RestService
 
                 if (result.Credits != null && result.Credits.Crew != null)
                 {
-                    var director = result.Credits.Crew
-                        .FirstOrDefault(c => c.Job == "Director");
+                    var directors = result.Credits.Crew
+                        .Where(c => c.Job == "Director")
+                        .Select(c => c.Name)
+                        .ToList();
 
-                    if (director != null)
+                    if (directors != null && directors.Count > 0)
                     {
-                        movie.Director = director.Name;
+                        movie.Director = string.Join(", ", directors);
                     }
-                }
-                else
-                {
-                    movie.Director = "vazio";
+                    else
+                    {
+                        movie.Director = "vazio";
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(result.backdrop_path))
@@ -93,7 +95,7 @@ public class RestService
             }
             catch (AuthenticationException ex)
             {
-                throw new AuthenticationException("Erro de autenticação: " + ex.Message);
+                throw new AuthenticationException($"Erro de autenticação: {ex.Message}");
             }
             catch (JsonException ex)
             {
@@ -106,56 +108,53 @@ public class RestService
         }
         return movie;
     }
-    public async Task<List<Movies>> GetMovies()
+    public async Task<List<Movies>> GetMovies(int page)
     {
         var movies = new List<Movies>();
-        for (int i = 100; i < 200; i++)
+        try
         {
-            try
+            HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={page}");
+
+            if (response.IsSuccessStatusCode)
             {
-                HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={i}");
+                var jsonString = await response.Content.ReadAsStreamAsync();
+                var result = await JsonSerializer.DeserializeAsync<MovieResults>(jsonString, _jsonOptions);
 
-                if (response.IsSuccessStatusCode)
+                foreach (var movie in result.Results)
                 {
-                    var jsonString = await response.Content.ReadAsStreamAsync();
-                    var result = await JsonSerializer.DeserializeAsync<MovieResults>(jsonString, _jsonOptions);
+                    movies.Add(movie);
 
-                    foreach (var movie in result.Results)
-                    {
-                        movies.Add(movie);
+                    //if (!string.IsNullOrEmpty(movie.Backdrop_Path))
+                    //{
+                    //    string backdropUrl = $"{AppSettings.ImageBaseUrl}{movie.Backdrop_Path}";
+                    //    string backdropFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_backdrop.jpg");
+                    //    await DownloadImageAsync(backdropUrl, backdropFilePath);
+                    //}
 
-                        //if (!string.IsNullOrEmpty(movie.Backdrop_Path))
-                        //{
-                        //    string backdropUrl = $"{AppSettings.ImageBaseUrl}{movie.Backdrop_Path}";
-                        //    string backdropFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_backdrop.jpg");
-                        //    await DownloadImageAsync(backdropUrl, backdropFilePath);
-                        //}
-
-                        //if (!string.IsNullOrEmpty(movie.poster_path))
-                        //{
-                        //    string posterUrl = $"{AppSettings.ImageBaseUrl}{movie.poster_path}";
-                        //    string posterFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_poster.jpg");
-                        //    await DownloadImageAsync(posterUrl, posterFilePath);
-                        //}
-                    }
+                    //if (!string.IsNullOrEmpty(movie.poster_path))
+                    //{
+                    //    string posterUrl = $"{AppSettings.ImageBaseUrl}{movie.poster_path}";
+                    //    string posterFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_poster.jpg");
+                    //    await DownloadImageAsync(posterUrl, posterFilePath);
+                    //}
                 }
             }
-            catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new HttpRequestException("Token expirado ou credenciais inválidas.");
-            }
-            catch (AuthenticationException ex)
-            {
-                throw new AuthenticationException("Erro de autenticação: " + ex.Message);
-            }
-            catch (JsonException ex)
-            {
-                throw new JsonException($"Erro ao deserializar JSON: {ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Erro ao verificar dados do filme. {ex.Message}");
-            }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new HttpRequestException("Token expirado ou credenciais inválidas.");
+        }
+        catch (AuthenticationException ex)
+        {
+            throw new AuthenticationException("Erro de autenticação: " + ex.Message);
+        }
+        catch (JsonException ex)
+        {
+            throw new JsonException($"Erro ao deserializar JSON: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao verificar dados do filme. {ex.Message}");
         }
 
         return movies;

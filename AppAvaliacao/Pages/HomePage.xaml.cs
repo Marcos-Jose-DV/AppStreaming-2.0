@@ -1,6 +1,7 @@
 using AppAvaliacao.Components;
 using AppAvaliacao.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.UI.Xaml;
 
 namespace AppAvaliacao.Pages;
 
@@ -65,5 +66,13 @@ public partial class HomePage : ContentPage
                 frame.ScaleTo(1, 550, Easing.CubicInOut),
                 frame.TranslateTo(0, 0, 550, Easing.CubicInOut)
             );
+    }
+
+    private async void SelectPage(object sender, EventArgs e)
+    {
+        if (BindingContext is HomeViewModel viewModel)
+        {
+           await viewModel.SelectPage();
+        }
     }
 }

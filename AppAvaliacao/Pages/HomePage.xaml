@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="AppAvaliacao.Pages.HomePage"
              BackgroundColor="#041218"
              Shell.BackgroundColor="#3255e2"
@@ -24,7 +25,7 @@
     <ContentPage.MenuBarItems >
         <MenuBarItem Text="Baixar">
             <MenuFlyoutItem Text="Excel"
-                            Command="{Binding DowloandFileCommand}"
+                            Command="{Binding DownloadFileCommand}"
                             CommandParameter="assessments.xlsx">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128202;"
@@ -32,7 +33,7 @@
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="PDF"
-                            Command="{Binding DowloandFileCommand}"
+                            Command="{Binding DownloadFileCommand}"
                             CommandParameter="assessments.pdf">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128196;"
@@ -40,7 +41,7 @@
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="Word"
-                            Command="{Binding DowloandFileCommand}"
+                            Command="{Binding DownloadFileCommand}"
                             CommandParameter="assessments.docx">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128195;"
@@ -48,7 +49,7 @@
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="TXT"
-                            Command="{Binding DowloandFileCommand}"
+                            Command="{Binding DownloadFileCommand}"
                             CommandParameter="assessments.txt">
                 <MenuFlyoutItem.IconImageSource>
                     <FontImageSource Glyph="&#128221;"
@@ -97,6 +98,7 @@
                 HeightRequest="60"
                 BackgroundColor="White"
                 Clicked="AddAssessment"/>
+
         <ScrollView>
             <VerticalStackLayout>
                 <!-- Header -->
@@ -120,50 +122,100 @@
                                        BackgroundColor="White"
                                        CancelButtonColor="#202380"
                                        SearchCommand="{Binding SearchTmdbCommand}"
-                                       SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"
-                                       />
+                                       SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
                         </Border>
                     </StackLayout>
                 </VerticalStackLayout>
-
                 <!-- Body -->
                 <FlexLayout FlexLayout.Grow="1"
                             Wrap="Wrap"
                             JustifyContent="Start"
-                            HorizontalOptions="Center"
+                            HorizontalOptions="Center"             
                             BindableLayout.ItemsSource="{Binding CardsHome}">
 
                     <!-- Content -->
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout>
+                            <Grid>
                                 <Frame CornerRadius="10"
                                        HasShadow="True"
-                                       BorderColor="White"
-                                       WidthRequest="160"
-                                       HeightRequest="240"
+                                       BorderColor="#3255e2"
                                        Padding="0"
                                        Margin="15">
-                                    <Image Source="{Binding ImagePath}"
-                                           x:Name="ImageCard"
-                                           Aspect="AspectFill"
-                                           WidthRequest="160"
-                                           HeightRequest="240">
+                                    <Grid>
+                                        <Border ZIndex="1" 
+                                                BackgroundColor="#3255e2"
+                                                HorizontalOptions="EndAndExpand"
+                                                VerticalOptions="EndAndExpand"
+                                                StrokeShape="RoundRectangle 10 0 0 0"
+                                                StrokeThickness="0"
+                                                Padding="5">
+                                            <Label Text="{Binding Assessments, StringFormat='{0}/10'}"
+                                                   HorizontalOptions="Center"/>
+                                        </Border>
+                                        <Image Source="{Binding ImagePath}"
+                                               x:Name="ImageCard"
+                                               Aspect="AspectFill"
+                                               WidthRequest="180"
+                                               HeightRequest="300">
 
-                                        <Image.GestureRecognizers>
-                                            <PointerGestureRecognizer PointerEntered="OnPointerEntered"
-                                                                      PointerExited="OnPointerExited"/>
+                                            <Image.GestureRecognizers>
+                                                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
+                                                                          PointerExited="OnPointerExited"/>
 
-                                            <TapGestureRecognizer Command="{Binding BindingContext.DetailCommand,Source={x:Reference PaiPage}}"
-                                                                  CommandParameter="{Binding Id}"/>
-                                        </Image.GestureRecognizers>
-                                    </Image>
+                                                <TapGestureRecognizer Command="{Binding BindingContext.DetailCommand,Source={x:Reference PaiPage}}"
+                                                                      CommandParameter="{Binding Id}"/>
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Grid>
                                 </Frame>
-                            </StackLayout>
+                            </Grid>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
                 </FlexLayout>
             </VerticalStackLayout>
         </ScrollView>
+
+        <HorizontalStackLayout HorizontalOptions="Start"
+                               VerticalOptions="End"
+                               Margin="20,10"
+                               Spacing="10">
+
+            <Button Text="◀️"
+                    BackgroundColor="White"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Command="{Binding BackPageCommand}"/>
+
+            <Border BackgroundColor="White"
+                    StrokeThickness="0"
+                    WidthRequest="40"
+                    HeightRequest="40">
+
+                <Entry x:Name="EntryField"
+                       Text="{Binding Page}"
+                       TextColor="Black"
+                       Completed="SelectPage"
+                       HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Center"
+                       Keyboard="Numeric"/>
+            </Border>
+
+            <Button Text="▶️"
+                    BackgroundColor="White"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    Command="{Binding NextPageCommand}"
+                    windows:VisualElement.AccessKey="A"
+                    windows:VisualElement.AccessKeyPlacement="Top"
+                    windows:VisualElement.AccessKeyHorizontalOffset="20"
+                    windows:VisualElement.AccessKeyVerticalOffset="20"/>
+        </HorizontalStackLayout>
+
+        <ActivityIndicator IsRunning="{Binding IsBusy}"
+                           Color="White"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center"
+                           ZIndex="3"/>
     </Grid>
 </ContentPage>
