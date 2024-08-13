@@ -1,4 +1,5 @@
-﻿using DataBase.Data;
+﻿using Azure;
+using DataBase.Data;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.Movies;
@@ -29,7 +30,7 @@ public class AssessmentsRepository : IAssessmentsRepository
     {
         var assessments = await _appDbContext.Assessments
         .Select(c => new CardHome(c.Id, c.ImagePath, c.Assessment))
-        .Skip((page -1) * 20)
+        .Skip((page - 1) * 20)
         .Take(20)
         .AsNoTracking()
         .ToListAsync();
@@ -87,11 +88,13 @@ public class AssessmentsRepository : IAssessmentsRepository
         _appDbContext.Assessments.Remove(assessment);
         await _appDbContext.SaveChangesAsync();
     }
-    public async Task<IEnumerable<CardHome>> GetFilterAsync(string filter)
+    public async Task<IEnumerable<CardHome>> GetFilterAsync(string filter, int page = 1)
     {
         var assessments = await _appDbContext.Assessments
              .Where(x => x.Category == filter)
              .Select(x => new CardHome(x.Id, x.ImagePath, x.Assessment))
+             .Skip((page - 1) * 20)
+             .Take(20)
              .AsNoTracking()
              .ToListAsync();
 

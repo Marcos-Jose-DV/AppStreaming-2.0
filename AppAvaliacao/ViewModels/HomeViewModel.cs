@@ -85,8 +85,8 @@ public partial class HomeViewModel : ObservableObject
 
     private async Task Get()
     {
-        _filter = "home";
-        CardsHome = await _assessmentsRepository.GetCardsHome();
+        _filter = "All";
+        CardsHome = await _assessmentsRepository.GetCardsHome(Page);
     }
 
     [RelayCommand]
@@ -115,36 +115,20 @@ public partial class HomeViewModel : ObservableObject
         try
         {
             IsBusy = !IsBusy;
-            CardsHome = null;
             _filter = filter;
             if (_filter == "All")
             {
-                Page = 1;
                 CardsHome = await _assessmentsRepository.GetCardsHome(Page);
-
                 return;
             }
 
             if (_filter == "Api")
             {
-                var cards = await _restService.GetMovies(Page);
-                var carsHome = new List<CardHome>();
-
-                foreach (var card in cards)
-                {
-                    var cardHome = new CardHome(
-                        card.Id,
-                        $"{AppSettings.ImageBaseUrl}{card.poster_path}",
-                        card.popularity.ToString());
-
-                    carsHome.Add(cardHome);
-                }
-
-                CardsHome = carsHome;
+                CardsHome = await _restService.GetMovies(Page);
                 return;
             }
 
-            CardsHome = await _assessmentsRepository.GetFilterAsync(filter);
+            CardsHome = await _assessmentsRepository.GetFilterAsync(filter, Page);
         }
         finally
         {

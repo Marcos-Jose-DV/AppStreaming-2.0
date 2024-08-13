@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Alerts;
+using Models;
 using Models.ApiTmdb;
 using Models.Movies;
 using System.Net;
@@ -7,7 +8,6 @@ using System.Security.Authentication;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
-
 
 namespace AppAvaliacao.Services;
 
@@ -108,9 +108,10 @@ public class RestService
         }
         return movie;
     }
-    public async Task<List<Movies>> GetMovies(int page)
+    public async Task<IEnumerable<CardHome>> GetMovies(int page)
     {
-        var movies = new List<Movies>();
+        var carsHome = new List<CardHome>();
+
         try
         {
             HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/trending/movie/week?language=pt-BR&page={page}");
@@ -122,21 +123,15 @@ public class RestService
 
                 foreach (var movie in result.Results)
                 {
-                    movies.Add(movie);
 
-                    //if (!string.IsNullOrEmpty(movie.Backdrop_Path))
-                    //{
-                    //    string backdropUrl = $"{AppSettings.ImageBaseUrl}{movie.Backdrop_Path}";
-                    //    string backdropFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_backdrop.jpg");
-                    //    await DownloadImageAsync(backdropUrl, backdropFilePath);
-                    //}
+                    var cardHome = new CardHome
+                        (
+                          movie.Id,
+                          $"{AppSettings.ImageBaseUrl}{movie.poster_path}",
+                          movie.popularity.ToString()
+                        );
 
-                    //if (!string.IsNullOrEmpty(movie.poster_path))
-                    //{
-                    //    string posterUrl = $"{AppSettings.ImageBaseUrl}{movie.poster_path}";
-                    //    string posterFilePath = Path.Combine("D:\\00_Servidor\\Imagens", $"{SanitizeFilename(movie.Title)}_poster.jpg");
-                    //    await DownloadImageAsync(posterUrl, posterFilePath);
-                    //}
+                    carsHome.Add(cardHome);
                 }
             }
         }
@@ -157,7 +152,7 @@ public class RestService
             throw new Exception($"Erro ao verificar dados do filme. {ex.Message}");
         }
 
-        return movies;
+        return carsHome;
     }
     private async Task DownloadImageAsync(string imageUrl, string filePath)
     {
