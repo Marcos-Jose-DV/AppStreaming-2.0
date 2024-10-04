@@ -154,6 +154,50 @@ public class RestService
 
         return carsHome;
     }
+
+    public async Task<CardHome> GetMovieByNameAsync(string name)
+    {
+        try
+        {
+            HttpResponseMessage response = await _httpClient.GetAsync($"{AppSettings.BaseUrl}/search/movie?query={name}&include_adult=false&language=pt-BR");
+
+            if (response.IsSuccessStatusCode)
+            {
+                var jsonString = await response.Content.ReadAsStreamAsync();
+                var result = await JsonSerializer.DeserializeAsync<MovieResults>(jsonString, _jsonOptions);
+
+                if (result is not null)
+                {
+                    var cardHome = new CardHome
+                        (
+                          result.Results.First().Id,
+                          $"{AppSettings.ImageBaseUrl}{result.Results.First().poster_path}",
+                           result.Results.First().popularity.ToString()
+                        );
+
+                    return cardHome;
+                }
+            }
+        }
+        catch (HttpRequestException ex) when (ex.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new HttpRequestException("Token expirado ou credenciais inválidas.");
+        }
+        catch (AuthenticationException ex)
+        {
+            throw new AuthenticationException("Erro de autenticação: " + ex.Message);
+        }
+        catch (JsonException ex)
+        {
+            throw new JsonException($"Erro ao deserializar JSON: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Erro ao verificar dados do filme. {ex.Message}");
+        }
+
+        return null;
+    }
     private async Task DownloadImageAsync(string imageUrl, string filePath)
     {
         var cancellationToken = new CancellationToken();

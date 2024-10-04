@@ -1,170 +1,238 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
-             x:Class="AppAvaliacao.Pages.HomePage"
-             BackgroundColor="#041218"
-             Shell.BackgroundColor="#3255e2"
-             Shell.TitleColor="White"
-             x:Name="PaiPage"
-             Title="Avaliações">
+<ContentPage
+    x:Class="AppAvaliacao.Pages.HomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:converters="clr-namespace:AppAvaliacao.Converters"
+    xmlns:windows="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.WindowsSpecific;assembly=Microsoft.Maui.Controls"
+    x:Name="PaiPage"
+    Title="Avaliações"
+    BackgroundColor="#041218"
+    Shell.BackgroundColor="#3255e2"
+    Shell.TitleColor="White">
+
 
     <ContentPage.Resources>
+        <converters:CardBackGroundColorConverter x:Key="CardBackGroundColorConverter" />
+
         <Style TargetType="Button">
-            <Setter Property="FontAttributes" Value="Bold"/>
+            <Setter Property="FontAttributes" Value="Bold" />
         </Style>
         <Style TargetType="Label">
-            <Setter Property="BackgroundColor" Value="Transparent"/>
-            <Setter Property="FontAttributes" Value="Bold"/>
-            <Setter Property="HorizontalOptions" Value="Start"/>
-            <Setter Property="VerticalOptions" Value="Center"/>
-            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="FontAttributes" Value="Bold" />
+            <Setter Property="HorizontalOptions" Value="Start" />
+            <Setter Property="VerticalOptions" Value="Center" />
+            <Setter Property="TextColor" Value="White" />
         </Style>
     </ContentPage.Resources>
 
-    <ContentPage.MenuBarItems >
+    <ContentPage.MenuBarItems>
         <MenuBarItem Text="Baixar">
-            <MenuFlyoutItem Text="Excel"
-                            Command="{Binding DownloadFileCommand}"
-                            CommandParameter="assessments.xlsx">
+            <MenuFlyoutItem
+                Command="{Binding DownloadFileCommand}"
+                CommandParameter="assessments.xlsx"
+                Text="Excel">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128202;"
-                                    FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128202;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="PDF"
-                            Command="{Binding DownloadFileCommand}"
-                            CommandParameter="assessments.pdf">
+            <MenuFlyoutItem
+                Command="{Binding DownloadFileCommand}"
+                CommandParameter="assessments.pdf"
+                Text="PDF">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128196;"
-                                 FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128196;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="Word"
-                            Command="{Binding DownloadFileCommand}"
-                            CommandParameter="assessments.docx">
+            <MenuFlyoutItem
+                Command="{Binding DownloadFileCommand}"
+                CommandParameter="assessments.docx"
+                Text="Word">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128195;"
-                                 FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128195;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
-            <MenuFlyoutItem Text="TXT"
-                            Command="{Binding DownloadFileCommand}"
-                            CommandParameter="assessments.txt">
+            <MenuFlyoutItem
+                Command="{Binding DownloadFileCommand}"
+                CommandParameter="assessments.txt"
+                Text="TXT">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128221;"
-                     FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128221;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
         </MenuBarItem>
 
         <MenuBarItem Text="Upload">
-            <MenuFlyoutItem Text="Excel"
-                            Command="{Binding UploadFileCommand}">
+            <MenuFlyoutItem Command="{Binding UploadFileCommand}" Text="Excel">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128202;"
-                         FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128202;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="PDF">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128196;"
-                         FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128196;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="Word">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128195;"
-                         FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128195;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
             <MenuFlyoutItem Text="TXT">
                 <MenuFlyoutItem.IconImageSource>
-                    <FontImageSource Glyph="&#128221;"
-             FontFamily="Arial" />
+                    <FontImageSource FontFamily="Arial" Glyph="&#128221;" />
                 </MenuFlyoutItem.IconImageSource>
             </MenuFlyoutItem>
         </MenuBarItem>
     </ContentPage.MenuBarItems>
 
     <Grid x:Name="GridContainer" RowDefinitions="*">
-        <Button ZIndex="2"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="10"
-                Text="+"
-                FontSize="30"
-                WidthRequest="60"
-                HeightRequest="60"
-                BackgroundColor="White"
-                Clicked="AddAssessment"/>
+        <Button
+            Margin="10"
+            BackgroundColor="White"
+            Clicked="AddAssessment"
+            FontSize="30"
+            HeightRequest="60"
+            HorizontalOptions="End"
+            Text="+"
+            VerticalOptions="End"
+            WidthRequest="60"
+            ZIndex="2" />
 
         <ScrollView>
             <VerticalStackLayout>
-                <!-- Header -->
+                <!--  Header  -->
                 <VerticalStackLayout>
-                    <StackLayout Orientation="Horizontal" BackgroundColor="#202380" Padding="10">
-                        <Button Text="Inicio" Command="{Binding FilterCommand}" CommandParameter="All"/>
-                        <Button Text="Filmes" Command="{Binding FilterCommand}" CommandParameter="Movie"/>
-                        <Button Text="Séries" Command="{Binding FilterCommand}" CommandParameter="Séries"/>
-                        <Button Text="Livros" Command="{Binding FilterCommand}" CommandParameter="Book"/>
-                        <Button Text="Musicas" Command="{Binding FilterCommand}" CommandParameter="Music"/>
-                        <Button Text="🛜" Command="{Binding FilterCommand}" CommandParameter="Api"/>
+                    <StackLayout
+                        Padding="10"
+                        BackgroundColor="#202380"
+                        Orientation="Horizontal">
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="All"
+                            Text="Inicio" />
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="Movie"
+                            Text="Filmes" />
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="Séries"
+                            Text="Séries" />
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="Book"
+                            Text="Livros" />
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="Music"
+                            Text="Musicas" />
+                        <Button
+                            Command="{Binding FilterCommand}"
+                            CommandParameter="Api"
+                            Text="🛜" />
 
-                        <Border HorizontalOptions="EndAndExpand"
-                                StrokeShape="RoundRectangle 20"
-                                Stroke="Transparent">
+                        <Border
+                            HorizontalOptions="EndAndExpand"
+                            Stroke="Transparent"
+                            StrokeShape="RoundRectangle 20">
 
-                            <SearchBar x:Name="searchBar"
-                                       Placeholder="Pesquisar"
-                                       HorizontalOptions="EndAndExpand"
-                                       WidthRequest="300"
-                                       BackgroundColor="White"
-                                       CancelButtonColor="#202380"
-                                       SearchCommand="{Binding SearchTmdbCommand}"
-                                       SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"/>
+                            <SearchBar
+                                x:Name="searchBar"
+                                BackgroundColor="White"
+                                CancelButtonColor="#202380"
+                                HorizontalOptions="EndAndExpand"
+                                Placeholder="Pesquisar"
+                                SearchCommand="{Binding SearchTmdbCommand}"
+                                SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}"
+                                WidthRequest="300" />
                         </Border>
                     </StackLayout>
                 </VerticalStackLayout>
-                <!-- Body -->
-                <FlexLayout FlexLayout.Grow="1"
-                            Wrap="Wrap"
-                            JustifyContent="Start"
-                            HorizontalOptions="Center"             
-                            BindableLayout.ItemsSource="{Binding CardsHome}">
+                <!--  Body  -->
+                <HorizontalStackLayout
+                    Margin="20,10"
+                    HorizontalOptions="Center"
+                    Spacing="10"
+                    VerticalOptions="End">
 
-                    <!-- Content -->
+                    <Button
+                        BackgroundColor="White"
+                        Command="{Binding BackPageCommand}"
+                        HeightRequest="40"
+                        Text="◀️"
+                        WidthRequest="40" />
+
+                    <Border
+                        BackgroundColor="White"
+                        HeightRequest="40"
+                        StrokeThickness="0"
+                        WidthRequest="40">
+
+                        <Entry
+                            x:Name="EntryField"
+                            Completed="SelectPage"
+                            HorizontalOptions="Center"
+                            HorizontalTextAlignment="Center"
+                            Keyboard="Numeric"
+                            Text="{Binding Page}"
+                            TextColor="Black"
+                            VerticalOptions="Center"
+                            VerticalTextAlignment="Center" />
+                    </Border>
+
+                    <Button
+                        windows:VisualElement.AccessKey="A"
+                        windows:VisualElement.AccessKeyHorizontalOffset="20"
+                        windows:VisualElement.AccessKeyPlacement="Top"
+                        windows:VisualElement.AccessKeyVerticalOffset="20"
+                        BackgroundColor="White"
+                        Command="{Binding NextPageCommand}"
+                        HeightRequest="40"
+                        Text="▶️"
+                        WidthRequest="40" />
+                </HorizontalStackLayout>
+
+                <FlexLayout
+                    BindableLayout.ItemsSource="{Binding CardsHome}"
+                    FlexLayout.Grow="1"
+                    HorizontalOptions="Center"
+                    JustifyContent="Start"
+                    Wrap="Wrap">
+
+                    <!--  Content  -->
                     <BindableLayout.ItemTemplate>
                         <DataTemplate>
                             <Grid>
-                                <Frame CornerRadius="10"
-                                       HasShadow="True"
-                                       BorderColor="#3255e2"
-                                       Padding="0"
-                                       Margin="15">
+                                <Frame
+                                    Margin="15"
+                                    Padding="0"
+                                    BorderColor="{Binding Concluded, Converter={converters:CardBackGroundColorConverter}}"
+                                    CornerRadius="10"
+                                    HasShadow="True">
                                     <Grid>
-                                        <Border ZIndex="1" 
-                                                BackgroundColor="#3255e2"
-                                                HorizontalOptions="EndAndExpand"
-                                                VerticalOptions="EndAndExpand"
-                                                StrokeShape="RoundRectangle 10 0 0 0"
-                                                StrokeThickness="0"
-                                                Padding="5">
-                                            <Label Text="{Binding Assessments, StringFormat='{0}/10'}"
-                                                   HorizontalOptions="Center"/>
+                                        <Border
+                                            Padding="5"
+                                            BackgroundColor="{Binding Concluded, Converter={converters:CardBackGroundColorConverter}}"
+                                            HorizontalOptions="EndAndExpand"
+                                            StrokeShape="RoundRectangle 10 0 0 0"
+                                            StrokeThickness="0"
+                                            VerticalOptions="EndAndExpand"
+                                            ZIndex="1">
+                                            <Label HorizontalOptions="Center" Text="{Binding Assessment, StringFormat='{0}/10'}" />
                                         </Border>
-                                        <Image Source="{Binding ImagePath}"
-                                               x:Name="ImageCard"
-                                               Aspect="AspectFill"
-                                               WidthRequest="180"
-                                               HeightRequest="300">
+                                        <Image
+                                            x:Name="ImageCard"
+                                            Aspect="AspectFill"
+                                            HeightRequest="300"
+                                            Source="{Binding ImagePath}"
+                                            WidthRequest="180">
 
                                             <Image.GestureRecognizers>
-                                                <PointerGestureRecognizer PointerEntered="OnPointerEntered"
-                                                                          PointerExited="OnPointerExited"/>
+                                                <PointerGestureRecognizer PointerEntered="OnPointerEntered" PointerExited="OnPointerExited" />
 
-                                                <TapGestureRecognizer Command="{Binding BindingContext.DetailCommand,Source={x:Reference PaiPage}}"
-                                                                      CommandParameter="{Binding Id}"/>
+                                                <TapGestureRecognizer Command="{Binding BindingContext.DetailCommand, Source={x:Reference PaiPage}}" CommandParameter="{Binding Id}" />
                                             </Image.GestureRecognizers>
                                         </Image>
                                     </Grid>
@@ -176,46 +244,12 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <HorizontalStackLayout HorizontalOptions="Start"
-                               VerticalOptions="End"
-                               Margin="20,10"
-                               Spacing="10">
 
-            <Button Text="◀️"
-                    BackgroundColor="White"
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    Command="{Binding BackPageCommand}"/>
-
-            <Border BackgroundColor="White"
-                    StrokeThickness="0"
-                    WidthRequest="40"
-                    HeightRequest="40">
-
-                <Entry x:Name="EntryField"
-                       Text="{Binding Page}"
-                       TextColor="Black"
-                       Completed="SelectPage"
-                       HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Center"
-                       Keyboard="Numeric"/>
-            </Border>
-
-            <Button Text="▶️"
-                    BackgroundColor="White"
-                    WidthRequest="40"
-                    HeightRequest="40"
-                    Command="{Binding NextPageCommand}"
-                    windows:VisualElement.AccessKey="A"
-                    windows:VisualElement.AccessKeyPlacement="Top"
-                    windows:VisualElement.AccessKeyHorizontalOffset="20"
-                    windows:VisualElement.AccessKeyVerticalOffset="20"/>
-        </HorizontalStackLayout>
-
-        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                           Color="White"
-                           HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           ZIndex="3"/>
+        <ActivityIndicator
+            HorizontalOptions="Center"
+            IsRunning="{Binding IsBusy}"
+            VerticalOptions="Center"
+            ZIndex="3"
+            Color="White" />
     </Grid>
 </ContentPage>

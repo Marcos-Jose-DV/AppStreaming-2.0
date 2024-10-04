@@ -7,13 +7,14 @@ public class CardHome
 
     public int Id { get;  set; }
     public string ImagePath { get;  set; }
-    public string Assessments { get;  set; }
+    public string Assessment { get;  set; }
+    public bool Concluded { get; set; }
 
     public CardHome(int id, string image, string assessments)
     {
         Id = id;
         ImagePath = image;
-        Assessments = assessments;
+        Assessment = assessments;
     }
 
 

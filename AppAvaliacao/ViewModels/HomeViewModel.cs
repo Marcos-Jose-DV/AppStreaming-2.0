@@ -10,7 +10,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Models;
 using Models.Movies;
 using Repository.Interfaces;
-using System.Threading;
 
 namespace AppAvaliacao.ViewModels;
 
@@ -171,14 +170,28 @@ public partial class HomeViewModel : ObservableObject
     }
 
     [RelayCommand]
-    async Task SearchTmdb(string text)
+    async Task SearchTmdb(string name)
     {
-        if (_filter != "Api")
+        try
         {
-            CardsHome = await _assessmentsRepository.GetNameAsync(text);
+            if (_filter != "Api")
+            {
+                CardsHome = await _assessmentsRepository.GetNameAsync(name);
+
+                return;
+            }
+
+            var movie = await _restService.GetMovieByNameAsync(name);
+            if (movie == null)
+                return;
+
+            CardsHome = [movie];
+        }
+        catch(Exception ex)
+        {
+            await Toast.Make(ex.Message).Show();
         }
     }
-
     [RelayCommand]
     async Task NextPage()
     {

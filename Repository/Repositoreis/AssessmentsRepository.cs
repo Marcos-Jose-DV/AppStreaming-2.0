@@ -24,12 +24,13 @@ public class AssessmentsRepository : IAssessmentsRepository
     }
     public async Task<List<Assessments>> GetAllAssessments()
         => await _appDbContext.Assessments
-            .OrderBy(x => x.Id)
+            .OrderBy(x => x.LastUpdate)
             .ToListAsync();
     public async Task<IEnumerable<CardHome>> GetCardsHome(int page = 1)
     {
         var assessments = await _appDbContext.Assessments
-        .Select(c => new CardHome(c.Id, c.ImagePath, c.Assessment))
+          .OrderByDescending(d => d.LastUpdate)
+        .Select(c => new CardHome(c.Id, c.ImagePath, c.Assessment) { Concluded = c.Concluded})
         .Skip((page - 1) * 20)
         .Take(20)
         .AsNoTracking()
